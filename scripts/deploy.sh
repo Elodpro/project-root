@@ -1,4 +1,5 @@
 #!/bin/bash
+# Pour le lancer il faut mettre ca dans le terminal : sh .\scripts\deploy.sh
 
 # --- ÉTAPE 1: VÉRIFICATION ---
 echo "Vérification des prérequis (Docker et Docker Compose)..."
