@@ -1,0 +1,67 @@
+version: '3.8'
+
+services:
+  # 1. Base de données MySQL
+  db:
+    image: mysql:8.0
+    container_name: mysql-db
+    restart: always
+    environment:
+      # Les mots de passe et noms sont tirés du fichier .env
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      # Persistance des données de la base de données
+      - db_data:/var/lib/mysql
+      # Script d'initialisation (si besoin)
+      - ./scripts/init-db.sh:/docker-entrypoint-initdb.d/init-db.sh
+    networks:
+      - app-network
+
+  # 2. Application WordPress
+  wordpress:
+    # Utilise l'image construite à partir du Dockerfile personnalisé
+    build:
+      context: ./docker/wordpress # Chemin vers le Dockerfile
+    container_name: wordpress-app
+    restart: always
+    environment:
+      # Configuration de la connexion à la base de données
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      # Montage du contenu personnalisé (thèmes, plugins)
+      - ./app/wordpress/wp-content:/var/www/html/wp-content
+    depends_on:
+      - db # S'assure que la DB démarre avant Wordpress
+    networks:
+      - app-network
+
+  # 3. Reverse Proxy Nginx
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    restart: always
+    ports:
+      # Mapper le port 80 pour HTTP, et 443 pour HTTPS (nécessaire pour l'étape 3)
+      - "80:80"
+      - "443:443"
+    volumes:
+      # Configuration Nginx pour agir comme reverse proxy
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/ssl:/etc/nginx/ssl # Pour les certificats SSL
+    depends_on:
+      - wordpress # Nginx doit attendre que Wordpress soit démarré
+    networks:
+      - app-network
+# Définition des réseaux et volumes
+volumes:
+  db_data:
+
+networks:
+  app-network:
+    driver: bridge

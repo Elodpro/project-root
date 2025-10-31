@@ -1,0 +1,10 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus 
+    type: prometheus
+    url: http://prometheus:9090 # 'prometheus' est le nom du service dans docker-compose.prod.yml
+    access: proxy
+    isDefault: true # Définir ceci comme la source de données par défaut
+    version: 1
+    editable: true

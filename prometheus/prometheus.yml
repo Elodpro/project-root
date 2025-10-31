@@ -1,0 +1,23 @@
+global:
+  # Intervalle de temps pour collecter les métriques
+  scrape_interval: 15s 
+
+# Définition des cibles à surveiller (targets)
+scrape_configs:
+  # 1. Surveiller Prometheus lui-même
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # 2. Exemple de surveillance d'un exportateur (ex: Node Exporter sur le conteneur DB)
+  # Pour surveiller MySQL, vous aurez besoin du MySQL Exporter
+  - job_name: 'mysql-exporter'
+    # 'db' est le nom du service dans docker-compose.prod.yml. 
+    # Le port 9104 est standard pour MySQL Exporter.
+    static_configs:
+      - targets: ['db:9104'] 
+
+  # 3. Exemple pour un exportateur Nginx
+  - job_name: 'nginx-exporter'
+    static_configs:
+      - targets: ['nginx:9113']
