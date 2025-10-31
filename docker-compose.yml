@@ -51,7 +51,7 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      # Configuration Nginx pour agir comme reverse proxy
+      # Configuration Nginx pour agir comme reverse proxy SOUCIS ICI !!!!
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
       - ./nginx/ssl:/etc/nginx/ssl # Pour les certificats SSL
     depends_on:
