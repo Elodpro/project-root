@@ -1,5 +1,12 @@
 #!/bin/bash
 # Pour le lancer il faut mettre ca dans le terminal : sh .\scripts\deploy.sh
+#Dans git bash : bash scripts/deploy.sh
+
+# --- FORCER LA DÉFINITION DE PWD (pour plus de robustesse sur les systèmes hybrides) ---
+# dirname $0 donne le chemin relatif du script (ex: scripts/)
+# pwd -P donne le chemin absolu du répertoire de travail
+# Le résultat est le chemin absolu du répertoire racine du projet
+export PWD=$(cd "$(dirname "$0")"; pwd -P)
 
 # --- ÉTAPE 1: VÉRIFICATION ---
 echo "Vérification des prérequis (Docker et Docker Compose)..."
@@ -40,4 +47,6 @@ echo "Déploiement de l'environnement de production..."
 docker-compose -f docker-compose.prod.yml up -d || { echo "Échec du déploiement de production"; exit 1; }
 
 echo "Vérification du statut des conteneurs de production..."
+
 docker-compose -f docker-compose.prod.yml ps
+echo "Déploiement de l'environnement de production terminé."

@@ -30,7 +30,7 @@ echo "Génération d'un certificat SSL auto-signé de 365 jours..."
 openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
     -keyout "$CERT_KEY" \
     -out "$CERT_FILE" \
-    -subj "/C=CH/ST=VD/L=Yverdon/O=Projet IaC/OU=IT/CN=localhost" -addext "subjectAltName = DNS:localhost,IP:127.0.0.1"
+    -subj '/C=CH/ST=VD/L=Yverdon/O=Projet IaC/OU=IT/CN=localhost" -addext "subjectAltName = DNS:localhost,IP:127.0.0.1'
 
 echo "Génération des certificats terminée. Ils se trouvent dans ${CERT_DIR}"
 # ... (fin du script)

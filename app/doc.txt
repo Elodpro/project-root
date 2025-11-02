@@ -1,0 +1,4 @@
+# Arrête et supprime tous les conteneurs et volumes (attention aux données !)
+docker-compose -f docker-compose.prod.yml down -v
+
+# Relance la création des certificats au bon endroit (dossier vert)
